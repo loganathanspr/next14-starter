@@ -1,9 +1,19 @@
 
-
-.container{
+.texts{
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.avatar{
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.container{
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
 .title{
