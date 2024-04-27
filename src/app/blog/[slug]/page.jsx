@@ -4,14 +4,14 @@ import PostUser from "@/components/postUser/postUser";
 import { Suspense } from "react";
 import { getPost } from "@/lib/data";
 
-//Fetch API
-// const getData = async (slug) => {
-//     const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${slug}`, { next: { revalidate: 3600 } });
-//     if (!res.ok) {
-//         throw new Error("Something went wrong");
-//     }
-//     return res.json()
-// }
+// Fetch API
+const getData = async (slug) => {
+    const res = await fetch(`http://localhost:3000/api/blog/${slug}`);
+    if (!res.ok) {
+        throw new Error("Something went wrong");
+    }
+    return res.json()
+}
 
 
 export const generateMetadata = async ({params}) => {
@@ -27,9 +27,9 @@ const SinglePostPage = async ({ params }) => {
     const { slug } = params;
     console.log("Params: ", params);
     // Fetch with API
-    // const post = await getData(slug);
+    const post = await getData(slug);
     // Fetch from dummy data
-    const post = await getPost(slug);
+    // const post = await getPost(slug);
     console.log("Post data: ", post)
     return (
         <div className={styles.container}>
