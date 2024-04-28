@@ -10,20 +10,21 @@ export const sayHello = async () => {
     console.log("Hello! This is a server action");
 }
 
-export const deletePost = async (formData) => {
-    const {id} = Object.fromEntries(formData);
+export const deletePost = async (id, formData) => {
+    // const {id} = Object.fromEntries(formData);
     try {
         connectToDb();
         await Post.findByIdAndDelete(id);
         console.log("Deleted from db");
         revalidatePath("/blog");
+        revalidatePath("/admin");
     }catch(err){
         console.log(err);
         return {error: "Something went wrong!"};
     }
 }
 
-export const addPost = async (formData) => {
+export const addPost = async (prevState, formData) => {
     const {title, desc, slug, userId} = Object.fromEntries(formData);
     console.log(title, desc, slug, userId);
     try{
@@ -37,12 +38,49 @@ export const addPost = async (formData) => {
         await newPost.save();
         console.log("Saved to db");
         revalidatePath("/blog");
+        revalidatePath("/admin");
+    }catch(err){
+        console.log(err);
+        return {error: "Something went wrong"};
+    }
+}
+
+
+export const addUser = async (prevState, formData) => {
+    const {username, email, password, img} = Object.fromEntries(formData);
+    try{
+        connectToDb();
+        const newUser = new User({
+            username,
+            email,
+            password,
+            img
+        });
+        await newUser.save();
+        console.log("Saved to db");
+        revalidatePath("/admin");
 
     }catch(err){
         console.log(err);
         return {error: "Something went wrong"};
     }
 }
+
+export const deleteUser = async (formData) => {
+    const {id} = Object.fromEntries(formData);
+    try{
+        connectToDb();
+        await Post.deleteMany({userId: id});
+        await User.findByIdAndDelete(id);
+        console.log("Deleted user from db");
+        revalidatePath("/admin");
+
+    }catch(err){
+        console.log(err);
+        return {error: "Something went wrong"};
+    }
+}
+
 
 export const handleGithubLogin = async() => {
     "use server"
